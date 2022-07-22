@@ -37,18 +37,19 @@ def _get_authorization_header_retriever(
 def _get_authorization_header(
     api_key: str = Security(RWAPIKeyHeader(name=HEADER_KEY)),
 ) -> str:
-    try:
-        token_prefix, token = api_key.split(" ")
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail={"msg": "WRONG_TOKEN_PREFIX"},
-        )
-    if token_prefix != "Bearer":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail={"msg": "WRONG_TOKEN_PREFIX"},
-        )
+    #try:
+        #token_prefix, token = api_key.split(" ")
+    token = api_key
+    #except ValueError:
+    #    raise HTTPException(
+    #        status_code=status.HTTP_403_FORBIDDEN,
+    #        detail={"msg": "WRONG_TOKEN_PREFIX"},
+    #    )
+    #if token_prefix != "Bearer":
+    #    raise HTTPException(
+    #        status_code=status.HTTP_403_FORBIDDEN,
+    #        detail={"msg": "WRONG_TOKEN_PREFIX"},
+    #    )
 
     return token
 
