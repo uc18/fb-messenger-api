@@ -69,6 +69,7 @@ def _get_current_user(
     config: Config = Depends(config.get_config)
 ) -> User:
     try:
+        print('token from _get_current_user '+token)
         return jwt.get_user_from_token(
             token,
             config.jwt_secret.get_secret_value(),
