@@ -9,7 +9,9 @@ from dependencies import config
 from models.user import User
 from services import jwt
 
+
 HEADER_KEY = "Authorization"
+
 
 class RWAPIKeyHeader(APIKeyHeader):
     async def __call__(  # noqa: WPS610
@@ -23,9 +25,11 @@ class RWAPIKeyHeader(APIKeyHeader):
                 status_code=original_auth_exc.status_code,
                 detail={"msg": "AUTHENTICATION_REQUIRED"},
             )
-            
+
+
 def get_current_user_authorizer(*, required: bool = True) -> Callable:  # type: ignore
     return _get_current_user if required else _get_current_user_optional
+
 
 def _get_authorization_header_retriever(
     *,
@@ -72,6 +76,11 @@ def _get_current_user(
             token,
             config.jwt_secret.get_secret_value(),
         )
+    except SystemError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"msg": "TOKEN_EXPIRED"}
+        )
     except ValueError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -86,3 +95,17 @@ def _get_current_user_optional(
         return _get_current_user(token)
 
     return None
+
+
+def _revoke_token(
+    token: str = Security(RWAPIKeyHeader(name=HEADER_KEY)),
+):
+    try:
+        print(token)
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"msg": "WRONG_TOKEN_PREFIX"},
+        )
+
+

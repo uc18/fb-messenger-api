@@ -163,11 +163,13 @@ class State(object):
 
     def logout(self):
         logout_h = self._logout_h
+        '''
         if not logout_h:
             url = _util.prefix_url("/bluebar/modern_settings_menu/")
             h_r = self._session.post(url, data={"pmid": "4"})
             logout_h = re.search(r'name=\\"h\\" value=\\"(.*?)\\"', h_r.text).group(1)
-
+        '''
+        self._session.cookies = None
         url = _util.prefix_url("/logout.php")
         return self._session.get(url, params={"ref": "mb", "h": logout_h}).ok
 
@@ -331,3 +333,6 @@ class State(object):
                 "Error when sending message: "
                 "No message IDs could be found: {}".format(j)
             )
+
+    def remove_cookie(self):
+        self._session.cookies = None

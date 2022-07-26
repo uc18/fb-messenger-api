@@ -17,12 +17,15 @@ router = APIRouter(
     tags=["contacts"],
 )
 
+
 class SendRequest(BaseModel):
     message: str
     thread_id: str
-    
+
+
 class SendResponse(BaseModel):
     msg_id: str
+
 
 @router.post("/send")
 def send(
@@ -37,11 +40,11 @@ def send(
     except:
         raise HTTPException(status_code=422, detail={"msg": "not found thread"})
     
-    
-    
+
 class SearchRequest(BaseModel):
     q: str
     limit: int = 10
+
 
 @router.post("/search")
 def search(
@@ -54,6 +57,7 @@ def search(
     users = client.searchForUsers(req.q, req.limit)
     return users
 
+
 @router.get(
     "/messages/{contact}",
 )
@@ -65,6 +69,6 @@ def messages_by_contact(
     try:
         client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value(), cookies=user.cookies)
         messages = client.fetchThreadMessages(contact)
-        return messages
-    except:
+    except ValueError:
         raise HTTPException(status_code=422, detail={"msg": "not found thread"})
+    return messages

@@ -10,19 +10,22 @@ router = APIRouter(
     tags=["login"],
 )
 
+
 class LoginRequst(BaseModel):
     email: str
     password: str
-    
+
+
 class LoginResponse(BaseModel):
     uid: str
     token: str
+
 
 @router.post(
     '/login',
     response_model=LoginResponse,
     responses={
-        401: {"detail": { "msg": "Not authorized"}}
+        401: {"detail": {"msg": "Not authorized"}}
     }    
 )
 def login(
