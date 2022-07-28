@@ -95,17 +95,3 @@ def _get_current_user_optional(
         return _get_current_user(token)
 
     return None
-
-
-def _revoke_token(
-    token: str = Security(RWAPIKeyHeader(name=HEADER_KEY)),
-):
-    try:
-        print(token)
-    except ValueError:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail={"msg": "WRONG_TOKEN_PREFIX"},
-        )
-
-

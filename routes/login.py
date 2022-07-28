@@ -71,11 +71,11 @@ def check(
         client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value(),
                                       cookies=user.cookies)
 
-        isLoggedIn = client.isLoggedIn()
+        logged = client.isLoggedIn()
 
         return CheckResponse(
             login=client.uid,
-            isLoggedIn=isLoggedIn
+            isLoggedIn=logged
         )
     except Exception as e:
         print(e)
