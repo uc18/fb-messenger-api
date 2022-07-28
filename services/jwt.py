@@ -19,7 +19,6 @@ def create_jwt_token(
     to_encode = jwt_content.copy()
     to_encode.update()
     to_encode.update({"sub": JWT_SUBJECT})
-    to_encode.update({"exp": create_exp_time()})
     return jwt.encode(to_encode, secret_key, algorithm=ALGORITHM)
 
 
@@ -39,8 +38,4 @@ def get_user_from_token(token: str, secret_key: str) -> str:
         raise ValueError("unable to decode JWT token") from decode_error
     except ValidationError as validation_error:
         raise ValueError("malformed payload in token") from validation_error
-
-
-def create_exp_time():
-    return datetime.now(tz=timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
