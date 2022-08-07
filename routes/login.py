@@ -46,7 +46,6 @@ def login(
         client = messenger.get_client(request.email, request.password, config.user_agent.get_secret_value())
         user = User(email=request.email, password=request.password, cookies=client.getSession())
         token = jwt.create_access_token_for_user(user, config.jwt_secret.get_secret_value())
-        
         return LoginResponse(
             uid=client.uid,
             token=token
@@ -54,6 +53,7 @@ def login(
     except Exception as e:
         print(e)
         raise HTTPException(status_code=401, detail="Not authorized")
+
 
 @router.get(
     '/check',
@@ -67,10 +67,8 @@ def check(
         config: Config = Depends(config.get_config)
 ) -> CheckResponse:
     try:
-
-        client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value(),
-                                      cookies=user.cookies)
-
+        client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value()
+                                      , cookies=user.cookies)
         logged = client.isLoggedIn()
 
         return CheckResponse(

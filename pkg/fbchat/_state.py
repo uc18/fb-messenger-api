@@ -163,13 +163,12 @@ class State(object):
 
     def logout(self):
         logout_h = self._logout_h
-        '''
+
         if not logout_h:
-            url = _util.prefix_url("/bluebar/modern_settings_menu/")
-            h_r = self._session.post(url, data={"pmid": "4"})
-            logout_h = re.search(r'name=\\"h\\" value=\\"(.*?)\\"', h_r.text).group(1)
-        '''
-        self._session.cookies = None
+            url = "https://m.facebook.com/bookmarks"
+            h_r = self._session.get(url)
+            temp_result = re.search(r'h=\S+&amp;t', h_r.text).group(0)
+            logout_h = re.sub(r'&amp;t', '', temp_result)
         url = _util.prefix_url("/logout.php")
         return self._session.get(url, params={"ref": "mb", "h": logout_h}).ok
 

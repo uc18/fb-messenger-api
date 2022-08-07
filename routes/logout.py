@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from config.config import Settings as Config
 from dependencies import config
-from dependencies.auth import get_current_user_authorizer, _revoke_token
+from dependencies.auth import get_current_user_authorizer
 from models.user import User
-from services import messenger, jwt
+from services import messenger
 
 router = APIRouter(
     tags=["logout"],
@@ -32,9 +32,9 @@ def logout(
         config: Config = Depends(config.get_config)
 ) -> LogoutResponse:
     try:
-        client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value(), cookies=user.cookies)
+        client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value()
+                                      , cookies=user.cookies)
         client.logout()
-        _revoke_token()
         return LogoutResponse(
             status="Ok"
         )
