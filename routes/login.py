@@ -27,7 +27,6 @@ class CheckRequest(BaseModel):
 
 
 class CheckResponse(BaseModel):
-    login: str
     isLoggedIn: bool
 
 
@@ -63,17 +62,11 @@ def login(
     }
 )
 def check(
-        user: User = Depends(get_current_user_authorizer()),
-        config: Config = Depends(config.get_config)
+        user: User = Depends(get_current_user_authorizer())
 ) -> CheckResponse:
     try:
-        client = messenger.get_client(user.email, user.password, config.user_agent.get_secret_value()
-                                      , cookies=user.cookies)
-        logged = client.isLoggedIn()
-
         return CheckResponse(
-            login=client.uid,
-            isLoggedIn=logged
+            isLoggedIn=True
         )
     except Exception as e:
         print(e)
